@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.itheima.dao.courseMapper">
+    <resultMap id="Product" type="com.itheima.domain.course">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"/>
+        <result property="hours" column="hours"/>
+        <result property="schools" column="schools"/>
+    </resultMap>
+    <select id="selectAll"  resultType="com.itheima.domain.course">
+        select * from course
+    </select>
+
+    <update id="update" parameterType="com.itheima.domain.course">
+        update course set hours = #{hours} , schools = #{schools} , name = #{name} where id = #{id}
+    </update>
+
+    <insert id="add">
+        insert into course(id,name, hours, schools) values(#{id},#{name}, #{hours}, #{schools})
+    </insert>
+
+    <delete id="delete" parameterType="int">
+        delete from course where
+        id = #{id}
+    </delete>
+
+</mapper>

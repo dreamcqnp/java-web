@@ -1,0 +1,43 @@
+### 1、获取商品列表
+GET http://localhost:8080/product/list
+
+### 2、添加商品
+POST http://localhost:8080/product/add
+Content-Type: application/json
+
+{
+"productName": "裙子",
+"nums": 150
+}
+
+### 3、更新商品
+POST http://localhost:8080/product/update
+Content-Type: application/json
+
+{
+  "id":1,
+  "productName": "皮靴",
+  "nums": 88
+}
+
+### 4、删除商品
+POST http://localhost:8080/product/delete
+Content-Type: application/json
+
+{
+  "id":30
+}
+
+### 5、添加商品（非JSON方式）
+POST http://localhost:8080/product/add-test
+Content-Type: application/x-www-form-urlencoded
+
+productName=裙子&nums=150
+
+### 6、删除商品（非JSON方式）
+POST http://localhost:8080/product/delete-test
+Content-Type: application/x-www-form-urlencoded
+
+id=29
+
+###

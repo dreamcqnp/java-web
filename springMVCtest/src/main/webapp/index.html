@@ -1,0 +1,154 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.22/vue.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.js"></script>
+
+    <style type="text/css">
+    td {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+
+<body>
+<div id="app">
+    <table id="productListTable">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>课程</th>
+            <th>课时数</th>
+            <th>学院</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="product in products">
+            <td>{{product.name}}</td>
+            <td>{{product.hours}}</td>
+            <td>{{product.schools}}</td>
+            <td>
+                <a href="#nowhere" @click="edit(product)">编辑</a>
+                <a href="#nowhere" @click="deleteProduct(product.id)">删除</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                课程名:
+                <input type="text" v-model="product4Add.name"/>
+                <br>
+                课时数：
+                <input type="number" v-model="product4Add.hours"/>
+                <br>
+                开课学院：
+                <input type="number" v-model="product4Add.hours"/>
+                <br>
+                <button type="button" v-on:click="add(product4Add)">增加</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div id="div4Update">
+        课程名称:
+        <input type="text" v-model="product4Update.name"/>
+        <br>
+        课时数：
+        <input type="number" v-model="product4Update.nums"/>
+        <br>
+        开课学院：
+        <input type="text" v-model="product4Update.schools"/>
+
+        <input type="hidden" v-model="product4Update.id"/>
+        <br>
+        <button type="button" v-on:click="update(product4Update)">修改</button>
+        <button type="button" v-on:click="cancel">取消</button>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+  $("#div4Update").hide();
+  //Model
+  var data = {
+    products: [],
+    product4Add: {},
+    product4Update: {}
+  };
+
+  //ViewModel
+  var vue = new Vue({
+    el: '#app',
+    data: data,
+    mounted: function () {
+      let _this = this;
+      _this.list();
+    },
+    methods: {
+      list() {
+        let _this = this;
+        axios.get("http://localhost:9528/course/selectAll").then(
+          (response) => {
+            console.log("查询用户列表结果：", response);
+            _this.products = response.data;
+          }
+        )
+      },
+      add: function (product) {
+        let _this = this;
+        axios.post("http://localhost:9528/course/add", product).then(
+          (response) => {
+            if (response.data) {
+              console.log("添加商品成功！");
+              _this.product4Add = {};
+              _this.list();
+            }
+          }
+        )
+      },
+      deleteProduct: function (id) {
+        let _this = this;
+        console.log("id" + id);
+        axios.post("http://localhost:9528/course/delete",
+          {
+            id: id
+          }
+          ).then(
+          (response) => {
+            if (response.data) {
+              console.log("删除商品成功！");
+              _this.list();
+            }
+          }
+        )
+      },
+      edit: function (product) {
+        $("#productListTable").hide();
+        $("#div4Update").show();
+        let _this = this;
+        _this.product4Update = product;
+      },
+      update: function (product) {
+        let _this = this;
+        axios.post("http://localhost:9528/course/update", product).then(
+          (response) => {
+            if (response.data) {
+              console.log("修改商品成功！");
+              _this.product4Add = {};
+              $("#productListTable").show();
+              $("#div4Update").hide();
+            }
+          }
+        )
+      },
+      cancel: function () {
+        //恢复显示
+        $("#productListTable").show();
+        $("#div4Update").hide();
+      }
+    }
+  });
+</script>
+</body>
+</html>
